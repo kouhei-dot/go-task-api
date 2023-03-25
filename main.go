@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"todo-api/config"
-	"todo-api/controller"
+	"todo-api/handlers"
+
+	"github.com/gin-gonic/gin"
 )
 
 func init() {
@@ -12,12 +13,19 @@ func init() {
 }
 
 func main() {
-	controller.Router()
-	// log.Fatal(http.ListenAndServe(":8080", nil))
-	err := http.ListenAndServe(":"+config.Conf.Web.Port, nil)
-	if err != nil {
-		fmt.Println("start server")
-	} else {
-		fmt.Println("failed")
-	}
+	router := gin.Default()
+	router.Use(func(ctx *gin.Context) {
+		ctx.Header("Access-Control-Allow-Origin", "*")
+		ctx.Header("Access-Control-Allow-Headers", "Content-Type")
+		ctx.Header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
+		if ctx.Request.Method == http.MethodOptions {
+			ctx.Status(http.StatusOK)
+			ctx.Writer.Write([]byte("OK"))
+		}
+	})
+	router.GET("/tasks", handlers.GetTasks)
+	router.POST("/task", handlers.CreateTask)
+	router.PATCH("/task", handlers.UpdateTask)
+	router.DELETE("/task/:id", handlers.DeleteTask)
+	router.Run(":" + config.Conf.Web.Port)
 }
