@@ -19,8 +19,7 @@ func main() {
 		ctx.Header("Access-Control-Allow-Headers", "Content-Type")
 		ctx.Header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
 		if ctx.Request.Method == http.MethodOptions {
-			ctx.Status(http.StatusOK)
-			ctx.Writer.Write([]byte("OK"))
+			ctx.String(http.StatusOK, "OK")
 		}
 	})
 	router.GET("/tasks", handlers.GetTasks)

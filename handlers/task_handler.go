@@ -36,8 +36,7 @@ func UpdateTask(ctx *gin.Context) {
 	if err := reqTask.UpdateTask(); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
-	ctx.Status(http.StatusAccepted)
-	ctx.Writer.Write([]byte("OK"))
+	ctx.String(http.StatusAccepted, "OK")
 }
 
 func DeleteTask(ctx *gin.Context) {
@@ -49,6 +48,5 @@ func DeleteTask(ctx *gin.Context) {
 	if err := models.DeleteTask(id); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
-	ctx.Status(http.StatusAccepted)
-	ctx.Writer.Write([]byte("OK"))
+	ctx.String(http.StatusAccepted, "OK")
 }
